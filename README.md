@@ -32,7 +32,7 @@ Actions are provided to natively boost the Heating `hive_local_thermostat.boost_
 
 There are also matching actions to cancel the native boost for Heating `hive_local_thermostat.cancel_boost_heating` and Water `hive_local_thermostat.cancel_boost_water` (SLR2 only), these actions will return the heating/water back to the state they were before the boost.
 
-![Hive Screenshot](https://raw.githubusercontent.com/andrew-codechimp/HA-Hive-Local-Thermostat/main/images/screenshot.png "Hive Controls")
+![Hive Screenshot](images/screenshot.png "Hive Controls")
 
 This project is not endorsed by, directly affiliated with, maintained, authorized, or sponsored by Hive.
 
@@ -40,7 +40,7 @@ This project is not endorsed by, directly affiliated with, maintained, authorize
 
 ### HACS
 
-[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=andrew-codechimp&repository=HA-Hive-Local-Thermostat&category=Integration)
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=larryb84&repository=HA-Hive-Local-Thermostat&category=Integration)
 
 Restart Home Assistant
 
