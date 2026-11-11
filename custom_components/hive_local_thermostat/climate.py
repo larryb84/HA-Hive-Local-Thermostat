@@ -87,7 +87,7 @@ class HiveClimateEntity(HiveEntity, ClimateEntity):
         )
         self._attr_has_entity_name = True
 
-        self._attr_temperature_unit = UnitOfTemperature.CELSIUS
+        self._attr_native_temperature_unit = UnitOfTemperature.CELSIUS
 
         if coordinator.show_heating_schedule_mode:
             self._attr_hvac_modes = [HVACMode.OFF, HVACMode.HEAT, HVACMode.AUTO]
@@ -120,7 +120,7 @@ class HiveClimateEntity(HiveEntity, ClimateEntity):
         if preset_mode == "boost":
             self.coordinator.pre_boost_hvac_mode = self._attr_hvac_mode
             self.coordinator.pre_boost_occupied_heating_setpoint_heat = (
-                self._attr_target_temperature
+                self._attr_native_target_temperature
             )
 
             await self.coordinator.async_heating_boost()
@@ -146,7 +146,7 @@ class HiveClimateEntity(HiveEntity, ClimateEntity):
         """Set the target temperature."""
         """Set the target temperature."""
         if temperature := kwargs.get(ATTR_TEMPERATURE):
-            self._attr_target_temperature = temperature
+            self._attr_native_target_temperature = temperature
 
         if hvac_mode := kwargs.get(ATTR_HVAC_MODE):
             self._hvac_mode_set_from_temperature = True
@@ -172,9 +172,9 @@ class HiveClimateEntity(HiveEntity, ClimateEntity):
             await self.coordinator.async_set_hvac_mode_auto()
         if hvac_mode == HVACMode.HEAT:
             if self._hvac_mode_set_from_temperature:
-                assert self._attr_target_temperature is not None
+                assert self._attr_native_target_temperature is not None
                 await self.coordinator.async_set_hvac_mode_heat(
-                    self._attr_target_temperature, self._hvac_mode_set_from_temperature
+                    self._attr_native_target_temperature, self._hvac_mode_set_from_temperature
                 )
 
                 self._hvac_mode_set_from_temperature = False
@@ -187,14 +187,14 @@ class HiveClimateEntity(HiveEntity, ClimateEntity):
                     self._hvac_mode_set_from_temperature,
                 )
             else:
-                if self._attr_current_temperature:
+                if self._attr_native_current_temperature:
                     # Get the current temperature and round down to nearest .5
-                    self._attr_target_temperature = (
-                        floor((self._attr_current_temperature) * 2) / 2
+                    self._attr_native_target_temperature = (
+                        floor((self._attr_native_current_temperature) * 2) / 2
                     )
-                assert self._attr_target_temperature is not None
+                assert self._attr_native_target_temperature is not None
                 await self.coordinator.async_set_hvac_mode_heat(
-                    self._attr_target_temperature, self._hvac_mode_set_from_temperature
+                    self._attr_native_target_temperature, self._hvac_mode_set_from_temperature
                 )
 
         if hvac_mode == HVACMode.OFF:
@@ -207,8 +207,8 @@ class HiveClimateEntity(HiveEntity, ClimateEntity):
 
     async def async_turn_on(self) -> None:
         """Set the HVAC State to on."""
-        assert self._attr_target_temperature is not None
-        await self.coordinator.async_set_hvac_mode_heat(self._attr_target_temperature)
+        assert self._attr_native_target_temperature is not None
+        await self.coordinator.async_set_hvac_mode_heat(self._attr_native_target_temperature)
 
     async def async_turn_off(self) -> None:
         """Set the HVAC State to off."""
@@ -217,8 +217,8 @@ class HiveClimateEntity(HiveEntity, ClimateEntity):
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
 
-        self._attr_current_temperature = self.coordinator.current_temperature
-        self._attr_target_temperature = self.coordinator.target_temperature
+        self._attr_native_current_temperature = self.coordinator.current_temperature
+        self._attr_native_target_temperature = self.coordinator.target_temperature
         self._attr_preset_mode = self.coordinator.preset_mode
         self._attr_hvac_action = self.coordinator.hvac_action
         self._attr_hvac_mode = self.coordinator.hvac_mode
